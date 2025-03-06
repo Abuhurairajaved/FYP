@@ -1,0 +1,170 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 2000px;
+                 height: 1000px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+             #config {
+                 float: left;
+                 width: 400px;
+                 height: 600px;
+             }
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+            <div id="config"></div>
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "lightblue", "id": "10038", "label": "10038", "shape": "dot", "size": 25, "title": "Patient 10038"}, {"color": "yellow", "id": "111115", "label": "111115", "shape": "dot", "size": 20, "title": "Admission 111115"}, {"color": "#97c2fc", "id": "111115.0", "label": "111115.0", "shape": "dot", "size": 10}, {"color": "orange", "id": "Test 50868 - Anion Gap", "label": "Test 50868 - Anion Gap", "shape": "dot", "size": 15, "title": "Test 50868 - Anion Gap: 12 mEq/L"}, {"color": "orange", "id": "Test 50882 - Bicarbonate", "label": "Test 50882 - Bicarbonate", "shape": "dot", "size": 15, "title": "Test 50882 - Bicarbonate: 27 mEq/L"}, {"color": "orange", "id": "Test 50902 - Chloride", "label": "Test 50902 - Chloride", "shape": "dot", "size": 15, "title": "Test 50902 - Chloride: 112 mEq/L"}, {"color": "orange", "id": "Test 50910 - Creatine Kinase (CK)", "label": "Test 50910 - Creatine Kinase (CK)", "shape": "dot", "size": 15, "title": "Test 50910 - Creatine Kinase (CK): 18 IU/L"}, {"color": "orange", "id": "Test 50911 - Creatine Kinase, MB Isoenzyme", "label": "Test 50911 - Creatine Kinase, MB Isoenzyme", "shape": "dot", "size": 15, "title": "Test 50911 - Creatine Kinase, MB Isoenzyme: NotDone ng/mL"}, {"color": "orange", "id": "Test 50912 - Creatinine", "label": "Test 50912 - Creatinine", "shape": "dot", "size": 15, "title": "Test 50912 - Creatinine: 1.0 mg/dL"}, {"color": "orange", "id": "Test 50920 - Estimated GFR (MDRD equation)", "label": "Test 50920 - Estimated GFR (MDRD equation)", "shape": "dot", "size": 15, "title": "Test 50920 - Estimated GFR (MDRD equation): See Comments nan"}, {"color": "orange", "id": "Test 50931 - Glucose", "label": "Test 50931 - Glucose", "shape": "dot", "size": 15, "title": "Test 50931 - Glucose: 132 mg/dL"}, {"color": "orange", "id": "Test 50963 - NTproBNP", "label": "Test 50963 - NTproBNP", "shape": "dot", "size": 15, "title": "Test 50963 - NTproBNP: 14791 pg/mL"}, {"color": "orange", "id": "Test 50971 - Potassium", "label": "Test 50971 - Potassium", "shape": "dot", "size": 15, "title": "Test 50971 - Potassium: 4.2 mEq/L"}, {"color": "orange", "id": "Test 50979 - Red Top Hold", "label": "Test 50979 - Red Top Hold", "shape": "dot", "size": 15, "title": "Test 50979 - Red Top Hold: HOLD nan"}, {"color": "orange", "id": "Test 50983 - Sodium", "label": "Test 50983 - Sodium", "shape": "dot", "size": 15, "title": "Test 50983 - Sodium: 147 mEq/L"}, {"color": "orange", "id": "Test 51003 - Troponin T", "label": "Test 51003 - Troponin T", "shape": "dot", "size": 15, "title": "Test 51003 - Troponin T: 0.05 ng/mL"}, {"color": "orange", "id": "Test 51006 - Urea Nitrogen", "label": "Test 51006 - Urea Nitrogen", "shape": "dot", "size": 15, "title": "Test 51006 - Urea Nitrogen: 22 mg/dL"}, {"color": "orange", "id": "Test 51146 - Basophils", "label": "Test 51146 - Basophils", "shape": "dot", "size": 15, "title": "Test 51146 - Basophils: 0.7 %"}, {"color": "orange", "id": "Test 51200 - Eosinophils", "label": "Test 51200 - Eosinophils", "shape": "dot", "size": 15, "title": "Test 51200 - Eosinophils: 1.7 %"}, {"color": "orange", "id": "Test 51221 - Hematocrit", "label": "Test 51221 - Hematocrit", "shape": "dot", "size": 15, "title": "Test 51221 - Hematocrit: 27.4 %"}, {"color": "orange", "id": "Test 51222 - Hemoglobin", "label": "Test 51222 - Hemoglobin", "shape": "dot", "size": 15, "title": "Test 51222 - Hemoglobin: 8.7 g/dL"}, {"color": "orange", "id": "Test 51237 - INR(PT)", "label": "Test 51237 - INR(PT)", "shape": "dot", "size": 15, "title": "Test 51237 - INR(PT): 1.9 nan"}, {"color": "orange", "id": "Test 51244 - Lymphocytes", "label": "Test 51244 - Lymphocytes", "shape": "dot", "size": 15, "title": "Test 51244 - Lymphocytes: 18.1 %"}, {"color": "orange", "id": "Test 51248 - MCH", "label": "Test 51248 - MCH", "shape": "dot", "size": 15, "title": "Test 51248 - MCH: 27.9 pg"}, {"color": "orange", "id": "Test 51249 - MCHC", "label": "Test 51249 - MCHC", "shape": "dot", "size": 15, "title": "Test 51249 - MCHC: 31.8 %"}, {"color": "orange", "id": "Test 51250 - MCV", "label": "Test 51250 - MCV", "shape": "dot", "size": 15, "title": "Test 51250 - MCV: 88 fL"}, {"color": "orange", "id": "Test 51252 - Microcytes", "label": "Test 51252 - Microcytes", "shape": "dot", "size": 15, "title": "Test 51252 - Microcytes: NORMAL nan"}, {"color": "orange", "id": "Test 51254 - Monocytes", "label": "Test 51254 - Monocytes", "shape": "dot", "size": 15, "title": "Test 51254 - Monocytes: 4.5 %"}, {"color": "orange", "id": "Test 51256 - Neutrophils", "label": "Test 51256 - Neutrophils", "shape": "dot", "size": 15, "title": "Test 51256 - Neutrophils: 75.0 %"}, {"color": "orange", "id": "Test 51265 - Platelet Count", "label": "Test 51265 - Platelet Count", "shape": "dot", "size": 15, "title": "Test 51265 - Platelet Count: 342 K/uL"}, {"color": "orange", "id": "Test 51274 - PT", "label": "Test 51274 - PT", "shape": "dot", "size": 15, "title": "Test 51274 - PT: 19.5 sec"}, {"color": "orange", "id": "Test 51275 - PTT", "label": "Test 51275 - PTT", "shape": "dot", "size": 15, "title": "Test 51275 - PTT: 30.9 sec"}, {"color": "orange", "id": "Test 51277 - RDW", "label": "Test 51277 - RDW", "shape": "dot", "size": 15, "title": "Test 51277 - RDW: 15.8 %"}, {"color": "orange", "id": "Test 51279 - Red Blood Cells", "label": "Test 51279 - Red Blood Cells", "shape": "dot", "size": 15, "title": "Test 51279 - Red Blood Cells: 3.12 m/uL"}, {"color": "orange", "id": "Test 51301 - White Blood Cells", "label": "Test 51301 - White Blood Cells", "shape": "dot", "size": 15, "title": "Test 51301 - White Blood Cells: 8.1 K/uL"}, {"color": "orange", "id": "Test 51463 - Bacteria", "label": "Test 51463 - Bacteria", "shape": "dot", "size": 15, "title": "Test 51463 - Bacteria: MOD nan"}, {"color": "orange", "id": "Test 51464 - Bilirubin", "label": "Test 51464 - Bilirubin", "shape": "dot", "size": 15, "title": "Test 51464 - Bilirubin: NEG EU/dL"}, {"color": "orange", "id": "Test 51466 - Blood", "label": "Test 51466 - Blood", "shape": "dot", "size": 15, "title": "Test 51466 - Blood: SM nan"}, {"color": "orange", "id": "Test 51476 - Epithelial Cells", "label": "Test 51476 - Epithelial Cells", "shape": "dot", "size": 15, "title": "Test 51476 - Epithelial Cells: 0 #/hpf"}, {"color": "orange", "id": "Test 51478 - Glucose", "label": "Test 51478 - Glucose", "shape": "dot", "size": 15, "title": "Test 51478 - Glucose: NEG mg/dL"}, {"color": "orange", "id": "Test 51479 - Granular Casts", "label": "Test 51479 - Granular Casts", "shape": "dot", "size": 15, "title": "Test 51479 - Granular Casts: 0-2 #/lpf"}, {"color": "orange", "id": "Test 51482 - Hyaline Casts", "label": "Test 51482 - Hyaline Casts", "shape": "dot", "size": 15, "title": "Test 51482 - Hyaline Casts: 0-2 #/lpf"}, {"color": "orange", "id": "Test 51484 - Ketone", "label": "Test 51484 - Ketone", "shape": "dot", "size": 15, "title": "Test 51484 - Ketone: NEG mg/dL"}, {"color": "orange", "id": "Test 51486 - Leukocytes", "label": "Test 51486 - Leukocytes", "shape": "dot", "size": 15, "title": "Test 51486 - Leukocytes: NEG nan"}, {"color": "orange", "id": "Test 51487 - Nitrite", "label": "Test 51487 - Nitrite", "shape": "dot", "size": 15, "title": "Test 51487 - Nitrite: NEG nan"}, {"color": "orange", "id": "Test 51491 - pH", "label": "Test 51491 - pH", "shape": "dot", "size": 15, "title": "Test 51491 - pH: 5.0 units"}, {"color": "orange", "id": "Test 51492 - Protein", "label": "Test 51492 - Protein", "shape": "dot", "size": 15, "title": "Test 51492 - Protein: 30 mg/dL"}, {"color": "orange", "id": "Test 51493 - RBC", "label": "Test 51493 - RBC", "shape": "dot", "size": 15, "title": "Test 51493 - RBC: 0-2 #/hpf"}, {"color": "orange", "id": "Test 51498 - Specific Gravity", "label": "Test 51498 - Specific Gravity", "shape": "dot", "size": 15, "title": "Test 51498 - Specific Gravity: 1.024  "}, {"color": "orange", "id": "Test 51506 - Urine Appearance", "label": "Test 51506 - Urine Appearance", "shape": "dot", "size": 15, "title": "Test 51506 - Urine Appearance: Hazy nan"}, {"color": "orange", "id": "Test 51508 - Urine Color", "label": "Test 51508 - Urine Color", "shape": "dot", "size": 15, "title": "Test 51508 - Urine Color: Yellow nan"}, {"color": "orange", "id": "Test 51514 - Urobilinogen", "label": "Test 51514 - Urobilinogen", "shape": "dot", "size": 15, "title": "Test 51514 - Urobilinogen: NEG mg/dL"}, {"color": "orange", "id": "Test 51516 - WBC", "label": "Test 51516 - WBC", "shape": "dot", "size": 15, "title": "Test 51516 - WBC: 0-2 #/hpf"}, {"color": "orange", "id": "Test 51519 - Yeast", "label": "Test 51519 - Yeast", "shape": "dot", "size": 15, "title": "Test 51519 - Yeast: NONE nan"}, {"color": "orange", "id": "Test 50813 - Lactate", "label": "Test 50813 - Lactate", "shape": "dot", "size": 15, "title": "Test 50813 - Lactate: 2.5 mmol/L"}, {"color": "orange", "id": "Test 50822 - Potassium, Whole Blood", "label": "Test 50822 - Potassium, Whole Blood", "shape": "dot", "size": 15, "title": "Test 50822 - Potassium, Whole Blood: 4.2 mEq/L"}, {"color": "orange", "id": "Test 50862 - Albumin", "label": "Test 50862 - Albumin", "shape": "dot", "size": 15, "title": "Test 50862 - Albumin: 2.6 g/dL"}, {"color": "orange", "id": "Test 50887 - Blue Top Hold", "label": "Test 50887 - Blue Top Hold", "shape": "dot", "size": 15, "title": "Test 50887 - Blue Top Hold: HOLD nan"}, {"color": "orange", "id": "Test 50889 - C-Reactive Protein", "label": "Test 50889 - C-Reactive Protein", "shape": "dot", "size": 15, "title": "Test 50889 - C-Reactive Protein: 274.7 mg/L"}, {"color": "orange", "id": "Test 50893 - Calcium, Total", "label": "Test 50893 - Calcium, Total", "shape": "dot", "size": 15, "title": "Test 50893 - Calcium, Total: 7.9 mg/dL"}, {"color": "orange", "id": "Test 50960 - Magnesium", "label": "Test 50960 - Magnesium", "shape": "dot", "size": 15, "title": "Test 50960 - Magnesium: 2.3 mg/dL"}, {"color": "orange", "id": "Test 50970 - Phosphate", "label": "Test 50970 - Phosphate", "shape": "dot", "size": 15, "title": "Test 50970 - Phosphate: 3.1 mg/dL"}, {"color": "orange", "id": "Test 51137 - Anisocytosis", "label": "Test 51137 - Anisocytosis", "shape": "dot", "size": 15, "title": "Test 51137 - Anisocytosis: NORMAL nan"}, {"color": "orange", "id": "Test 51144 - Bands", "label": "Test 51144 - Bands", "shape": "dot", "size": 15, "title": "Test 51144 - Bands: 0 %"}, {"color": "orange", "id": "Test 51214 - Fibrinogen, Functional", "label": "Test 51214 - Fibrinogen, Functional", "shape": "dot", "size": 15, "title": "Test 51214 - Fibrinogen, Functional: 668 mg/dL"}, {"color": "orange", "id": "Test 51233 - Hypochromia", "label": "Test 51233 - Hypochromia", "shape": "dot", "size": 15, "title": "Test 51233 - Hypochromia: 1+ nan"}, {"color": "orange", "id": "Test 51246 - Macrocytes", "label": "Test 51246 - Macrocytes", "shape": "dot", "size": 15, "title": "Test 51246 - Macrocytes: NORMAL nan"}, {"color": "orange", "id": "Test 51260 - Ovalocytes", "label": "Test 51260 - Ovalocytes", "shape": "dot", "size": 15, "title": "Test 51260 - Ovalocytes: 2+ nan"}, {"color": "orange", "id": "Test 51266 - Platelet Smear", "label": "Test 51266 - Platelet Smear", "shape": "dot", "size": 15, "title": "Test 51266 - Platelet Smear: LOW nan"}, {"color": "orange", "id": "Test 51267 - Poikilocytosis", "label": "Test 51267 - Poikilocytosis", "shape": "dot", "size": 15, "title": "Test 51267 - Poikilocytosis: 2+ nan"}, {"color": "orange", "id": "Test 51268 - Polychromasia", "label": "Test 51268 - Polychromasia", "shape": "dot", "size": 15, "title": "Test 51268 - Polychromasia: NORMAL nan"}, {"color": "orange", "id": "Test 51288 - Sedimentation Rate", "label": "Test 51288 - Sedimentation Rate", "shape": "dot", "size": 15, "title": "Test 51288 - Sedimentation Rate: 74 mm/hr"}, {"color": "orange", "id": "Test 51296 - Teardrop Cells", "label": "Test 51296 - Teardrop Cells", "shape": "dot", "size": 15, "title": "Test 51296 - Teardrop Cells: 1+ nan"}, {"color": "orange", "id": "Test 50861 - Alanine Aminotransferase (ALT)", "label": "Test 50861 - Alanine Aminotransferase (ALT)", "shape": "dot", "size": 15, "title": "Test 50861 - Alanine Aminotransferase (ALT): 19 IU/L"}, {"color": "orange", "id": "Test 50863 - Alkaline Phosphatase", "label": "Test 50863 - Alkaline Phosphatase", "shape": "dot", "size": 15, "title": "Test 50863 - Alkaline Phosphatase: 57 IU/L"}, {"color": "orange", "id": "Test 50878 - Asparate Aminotransferase (AST)", "label": "Test 50878 - Asparate Aminotransferase (AST)", "shape": "dot", "size": 15, "title": "Test 50878 - Asparate Aminotransferase (AST): 24 IU/L"}, {"color": "orange", "id": "Test 50885 - Bilirubin, Total", "label": "Test 50885 - Bilirubin, Total", "shape": "dot", "size": 15, "title": "Test 50885 - Bilirubin, Total: 0.7 mg/dL"}, {"color": "orange", "id": "Test 50954 - Lactate Dehydrogenase (LD)", "label": "Test 50954 - Lactate Dehydrogenase (LD)", "shape": "dot", "size": 15, "title": "Test 50954 - Lactate Dehydrogenase (LD): 158 IU/L"}, {"color": "orange", "id": "Test 50993 - Thyroid Stimulating Hormone", "label": "Test 50993 - Thyroid Stimulating Hormone", "shape": "dot", "size": 15, "title": "Test 50993 - Thyroid Stimulating Hormone: 2.4 uIU/mL"}, {"color": "orange", "id": "Test 50800 - SPECIMEN TYPE", "label": "Test 50800 - SPECIMEN TYPE", "shape": "dot", "size": 15, "title": "Test 50800 - SPECIMEN TYPE: ART nan"}, {"color": "orange", "id": "Test 50802 - Base Excess", "label": "Test 50802 - Base Excess", "shape": "dot", "size": 15, "title": "Test 50802 - Base Excess: 0 mEq/L"}, {"color": "orange", "id": "Test 50804 - Calculated Total CO2", "label": "Test 50804 - Calculated Total CO2", "shape": "dot", "size": 15, "title": "Test 50804 - Calculated Total CO2: 24 mEq/L"}, {"color": "orange", "id": "Test 50818 - pCO2", "label": "Test 50818 - pCO2", "shape": "dot", "size": 15, "title": "Test 50818 - pCO2: 33 mm Hg"}, {"color": "orange", "id": "Test 50820 - pH", "label": "Test 50820 - pH", "shape": "dot", "size": 15, "title": "Test 50820 - pH: 7.46 units"}, {"color": "orange", "id": "Test 50821 - pO2", "label": "Test 50821 - pO2", "shape": "dot", "size": 15, "title": "Test 50821 - pO2: 69 mm Hg"}, {"color": "orange", "id": "Test 51082 - Creatinine, Urine", "label": "Test 51082 - Creatinine, Urine", "shape": "dot", "size": 15, "title": "Test 51082 - Creatinine, Urine: 120 mg/dL"}, {"color": "orange", "id": "Test 51087 - Length of Urine Collection", "label": "Test 51087 - Length of Urine Collection", "shape": "dot", "size": 15, "title": "Test 51087 - Length of Urine Collection: RANDOM nan"}, {"color": "orange", "id": "Test 51093 - Osmolality, Urine", "label": "Test 51093 - Osmolality, Urine", "shape": "dot", "size": 15, "title": "Test 51093 - Osmolality, Urine: 575 mOsm/kg"}, {"color": "orange", "id": "Test 51100 - Sodium, Urine", "label": "Test 51100 - Sodium, Urine", "shape": "dot", "size": 15, "title": "Test 51100 - Sodium, Urine: LESS THAN 10 mEq/L"}, {"color": "orange", "id": "Test 51104 - Urea Nitrogen, Urine", "label": "Test 51104 - Urea Nitrogen, Urine", "shape": "dot", "size": 15, "title": "Test 51104 - Urea Nitrogen, Urine: 1056 mg/dL"}, {"color": "orange", "id": "Test 51505 - Uric Acid Crystals", "label": "Test 51505 - Uric Acid Crystals", "shape": "dot", "size": 15, "title": "Test 51505 - Uric Acid Crystals: MANY nan"}, {"color": "orange", "id": "Test 50924 - Ferritin", "label": "Test 50924 - Ferritin", "shape": "dot", "size": 15, "title": "Test 50924 - Ferritin: 1008 ng/mL"}, {"color": "orange", "id": "Test 50925 - Folate", "label": "Test 50925 - Folate", "shape": "dot", "size": 15, "title": "Test 50925 - Folate: 13.7 ng/mL"}, {"color": "orange", "id": "Test 50952 - Iron", "label": "Test 50952 - Iron", "shape": "dot", "size": 15, "title": "Test 50952 - Iron: 14 ug/dL"}, {"color": "orange", "id": "Test 50953 - Iron Binding Capacity, Total", "label": "Test 50953 - Iron Binding Capacity, Total", "shape": "dot", "size": 15, "title": "Test 50953 - Iron Binding Capacity, Total: 160 ug/dL"}, {"color": "orange", "id": "Test 50998 - Transferrin", "label": "Test 50998 - Transferrin", "shape": "dot", "size": 15, "title": "Test 50998 - Transferrin: 123 mg/dL"}, {"color": "orange", "id": "Test 51010 - Vitamin B12", "label": "Test 51010 - Vitamin B12", "shape": "dot", "size": 15, "title": "Test 51010 - Vitamin B12: 1486 pg/mL"}]);
+                  edges = new vis.DataSet([{"from": "10038", "title": "had admission", "to": "111115", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50868 - Anion Gap", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50882 - Bicarbonate", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50902 - Chloride", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50910 - Creatine Kinase (CK)", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50911 - Creatine Kinase, MB Isoenzyme", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50912 - Creatinine", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50920 - Estimated GFR (MDRD equation)", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50931 - Glucose", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50963 - NTproBNP", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50971 - Potassium", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50979 - Red Top Hold", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50983 - Sodium", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51003 - Troponin T", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51006 - Urea Nitrogen", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51146 - Basophils", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51200 - Eosinophils", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51221 - Hematocrit", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51222 - Hemoglobin", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51237 - INR(PT)", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51244 - Lymphocytes", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51248 - MCH", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51249 - MCHC", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51250 - MCV", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51252 - Microcytes", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51254 - Monocytes", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51256 - Neutrophils", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51265 - Platelet Count", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51274 - PT", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51275 - PTT", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51277 - RDW", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51279 - Red Blood Cells", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51301 - White Blood Cells", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51463 - Bacteria", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51464 - Bilirubin", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51466 - Blood", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51476 - Epithelial Cells", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51478 - Glucose", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51479 - Granular Casts", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51482 - Hyaline Casts", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51484 - Ketone", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51486 - Leukocytes", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51487 - Nitrite", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51491 - pH", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51492 - Protein", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51493 - RBC", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51498 - Specific Gravity", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51506 - Urine Appearance", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51508 - Urine Color", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51514 - Urobilinogen", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51516 - WBC", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51519 - Yeast", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50813 - Lactate", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50822 - Potassium, Whole Blood", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50862 - Albumin", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50887 - Blue Top Hold", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50889 - C-Reactive Protein", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50893 - Calcium, Total", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50960 - Magnesium", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50970 - Phosphate", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51137 - Anisocytosis", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51144 - Bands", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51214 - Fibrinogen, Functional", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51233 - Hypochromia", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51246 - Macrocytes", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51260 - Ovalocytes", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51266 - Platelet Smear", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51267 - Poikilocytosis", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51268 - Polychromasia", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51288 - Sedimentation Rate", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51296 - Teardrop Cells", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50861 - Alanine Aminotransferase (ALT)", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50863 - Alkaline Phosphatase", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50878 - Asparate Aminotransferase (AST)", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50885 - Bilirubin, Total", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50954 - Lactate Dehydrogenase (LD)", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50993 - Thyroid Stimulating Hormone", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50800 - SPECIMEN TYPE", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50802 - Base Excess", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50804 - Calculated Total CO2", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50818 - pCO2", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50820 - pH", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50821 - pO2", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51082 - Creatinine, Urine", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51087 - Length of Urine Collection", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51093 - Osmolality, Urine", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51100 - Sodium, Urine", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51104 - Urea Nitrogen, Urine", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51505 - Uric Acid Crystals", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50924 - Ferritin", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50925 - Folate", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50952 - Iron", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50953 - Iron Binding Capacity, Total", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 50998 - Transferrin", "width": 1}, {"from": "111115.0", "title": "lab result", "to": "Test 51010 - Vitamin B12", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": true,
+        "filter": [
+            "physics"
+        ]
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+                  // if this network requires displaying the configure window,
+                  // put it in its div
+                  options.configure["container"] = document.getElementById("config");
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

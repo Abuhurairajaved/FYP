@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 2000px;
+                 height: 1000px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "ICD9: 01716", "label": "ICD9: 01716", "shape": "dot", "size": 15, "title": "Erythema nodosum with hypersensitivity reaction in tuberculosis, tubercle bacilli not found by bacteriological or histological examination, but tuberculosis confirmed by other methods [inoculation of animals]"}, {"color": "#97c2fc", "id": "Title: 01716", "label": "Title: 01716", "shape": "dot", "size": 15, "title": "Erythema nodosum with hypersensitivity reaction in tuberculosis, tubercle bacilli not found by bacteriological or histological examination, but tuberculosis confirmed by other methods [inoculation of animals]"}, {"color": "#97c2fc", "id": "ICD9: 01720", "label": "ICD9: 01720", "shape": "dot", "size": 15, "title": "Tuberculosis of peripheral lymph nodes, unspecified"}, {"color": "#97c2fc", "id": "Title: 01720", "label": "Title: 01720", "shape": "dot", "size": 15, "title": "Tuberculosis of peripheral lymph nodes, unspecified"}, {"color": "#97c2fc", "id": "ICD9: 01721", "label": "ICD9: 01721", "shape": "dot", "size": 15, "title": "Tuberculosis of peripheral lymph nodes, bacteriological or histological examination not done"}, {"color": "#97c2fc", "id": "Title: 01721", "label": "Title: 01721", "shape": "dot", "size": 15, "title": "Tuberculosis of peripheral lymph nodes, bacteriological or histological examination not done"}, {"color": "#97c2fc", "id": "ICD9: 01722", "label": "ICD9: 01722", "shape": "dot", "size": 15, "title": "Tuberculosis of peripheral lymph nodes, bacteriological or histological examination unknown (at present)"}, {"color": "#97c2fc", "id": "Title: 01722", "label": "Title: 01722", "shape": "dot", "size": 15, "title": "Tuberculosis of peripheral lymph nodes, bacteriological or histological examination unknown (at present)"}, {"color": "#97c2fc", "id": "ICD9: 01723", "label": "ICD9: 01723", "shape": "dot", "size": 15, "title": "Tuberculosis of peripheral lymph nodes, tubercle bacilli found (in sputum) by microscopy"}, {"color": "#97c2fc", "id": "Title: 01723", "label": "Title: 01723", "shape": "dot", "size": 15, "title": "Tuberculosis of peripheral lymph nodes, tubercle bacilli found (in sputum) by microscopy"}, {"color": "#97c2fc", "id": "ICD9: 01724", "label": "ICD9: 01724", "shape": "dot", "size": 15, "title": "Tuberculosis of peripheral lymph nodes, tubercle bacilli not found (in sputum) by microscopy, but found by bacterial culture"}, {"color": "#97c2fc", "id": "Title: 01724", "label": "Title: 01724", "shape": "dot", "size": 15, "title": "Tuberculosis of peripheral lymph nodes, tubercle bacilli not found (in sputum) by microscopy, but found by bacterial culture"}, {"color": "#97c2fc", "id": "ICD9: 01725", "label": "ICD9: 01725", "shape": "dot", "size": 15, "title": "Tuberculosis of peripheral lymph nodes, tubercle bacilli not found by bacteriological examination, but tuberculosis confirmed histologically"}, {"color": "#97c2fc", "id": "Title: 01725", "label": "Title: 01725", "shape": "dot", "size": 15, "title": "Tuberculosis of peripheral lymph nodes, tubercle bacilli not found by bacteriological examination, but tuberculosis confirmed histologically"}, {"color": "#97c2fc", "id": "ICD9: 01726", "label": "ICD9: 01726", "shape": "dot", "size": 15, "title": "Tuberculosis of peripheral lymph nodes, tubercle bacilli not found by bacteriological or histological examination, but tuberculosis confirmed by other methods [inoculation of animals]"}, {"color": "#97c2fc", "id": "Title: 01726", "label": "Title: 01726", "shape": "dot", "size": 15, "title": "Tuberculosis of peripheral lymph nodes, tubercle bacilli not found by bacteriological or histological examination, but tuberculosis confirmed by other methods [inoculation of animals]"}, {"color": "#97c2fc", "id": "ICD9: 01730", "label": "ICD9: 01730", "shape": "dot", "size": 15, "title": "Tuberculosis of eye, unspecified"}, {"color": "#97c2fc", "id": "Title: 01730", "label": "Title: 01730", "shape": "dot", "size": 15, "title": "Tuberculosis of eye, unspecified"}, {"color": "#97c2fc", "id": "ICD9: 01731", "label": "ICD9: 01731", "shape": "dot", "size": 15, "title": "Tuberculosis of eye, bacteriological or histological examination not done"}, {"color": "#97c2fc", "id": "Title: 01731", "label": "Title: 01731", "shape": "dot", "size": 15, "title": "Tuberculosis of eye, bacteriological or histological examination not done"}, {"color": "#97c2fc", "id": "ICD9: 01732", "label": "ICD9: 01732", "shape": "dot", "size": 15, "title": "Tuberculosis of eye, bacteriological or histological examination unknown (at present)"}, {"color": "#97c2fc", "id": "Title: 01732", "label": "Title: 01732", "shape": "dot", "size": 15, "title": "Tuberculosis of eye, bacteriological or histological examination unknown (at present)"}, {"color": "#97c2fc", "id": "ICD9: 01733", "label": "ICD9: 01733", "shape": "dot", "size": 15, "title": "Tuberculosis of eye, tubercle bacilli found (in sputum) by microscopy"}, {"color": "#97c2fc", "id": "Title: 01733", "label": "Title: 01733", "shape": "dot", "size": 15, "title": "Tuberculosis of eye, tubercle bacilli found (in sputum) by microscopy"}, {"color": "#97c2fc", "id": "ICD9: 01734", "label": "ICD9: 01734", "shape": "dot", "size": 15, "title": "Tuberculosis of eye, tubercle bacilli not found (in sputum) by microscopy, but found by bacterial culture"}, {"color": "#97c2fc", "id": "Title: 01734", "label": "Title: 01734", "shape": "dot", "size": 15, "title": "Tuberculosis of eye, tubercle bacilli not found (in sputum) by microscopy, but found by bacterial culture"}, {"color": "#97c2fc", "id": "ICD9: 01735", "label": "ICD9: 01735", "shape": "dot", "size": 15, "title": "Tuberculosis of eye, tubercle bacilli not found by bacteriological examination, but tuberculosis confirmed histologically"}, {"color": "#97c2fc", "id": "Title: 01735", "label": "Title: 01735", "shape": "dot", "size": 15, "title": "Tuberculosis of eye, tubercle bacilli not found by bacteriological examination, but tuberculosis confirmed histologically"}, {"color": "#97c2fc", "id": "ICD9: 01736", "label": "ICD9: 01736", "shape": "dot", "size": 15, "title": "Tuberculosis of eye, tubercle bacilli not found by bacteriological or histological examination, but tuberculosis confirmed by other methods [inoculation of animals]"}, {"color": "#97c2fc", "id": "Title: 01736", "label": "Title: 01736", "shape": "dot", "size": 15, "title": "Tuberculosis of eye, tubercle bacilli not found by bacteriological or histological examination, but tuberculosis confirmed by other methods [inoculation of animals]"}, {"color": "#97c2fc", "id": "ICD9: 01740", "label": "ICD9: 01740", "shape": "dot", "size": 15, "title": "Tuberculosis of ear, unspecified"}, {"color": "#97c2fc", "id": "Title: 01740", "label": "Title: 01740", "shape": "dot", "size": 15, "title": "Tuberculosis of ear, unspecified"}, {"color": "#97c2fc", "id": "ICD9: 01741", "label": "ICD9: 01741", "shape": "dot", "size": 15, "title": "Tuberculosis of ear, bacteriological or histological examination not done"}, {"color": "#97c2fc", "id": "Title: 01741", "label": "Title: 01741", "shape": "dot", "size": 15, "title": "Tuberculosis of ear, bacteriological or histological examination not done"}, {"color": "#97c2fc", "id": "ICD9: 01742", "label": "ICD9: 01742", "shape": "dot", "size": 15, "title": "Tuberculosis of ear, bacteriological or histological examination unknown (at present)"}, {"color": "#97c2fc", "id": "Title: 01742", "label": "Title: 01742", "shape": "dot", "size": 15, "title": "Tuberculosis of ear, bacteriological or histological examination unknown (at present)"}, {"color": "#97c2fc", "id": "ICD9: 01743", "label": "ICD9: 01743", "shape": "dot", "size": 15, "title": "Tuberculosis of ear, tubercle bacilli found (in sputum) by microscopy"}, {"color": "#97c2fc", "id": "Title: 01743", "label": "Title: 01743", "shape": "dot", "size": 15, "title": "Tuberculosis of ear, tubercle bacilli found (in sputum) by microscopy"}, {"color": "#97c2fc", "id": "ICD9: 01744", "label": "ICD9: 01744", "shape": "dot", "size": 15, "title": "Tuberculosis of ear, tubercle bacilli not found (in sputum) by microscopy, but found by bacterial culture"}, {"color": "#97c2fc", "id": "Title: 01744", "label": "Title: 01744", "shape": "dot", "size": 15, "title": "Tuberculosis of ear, tubercle bacilli not found (in sputum) by microscopy, but found by bacterial culture"}]);
+                  edges = new vis.DataSet([{"color": "green", "from": "ICD9: 01716", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01716", "width": 1}, {"color": "green", "from": "ICD9: 01720", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01720", "width": 1}, {"color": "green", "from": "ICD9: 01721", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01721", "width": 1}, {"color": "green", "from": "ICD9: 01722", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01722", "width": 1}, {"color": "green", "from": "ICD9: 01723", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01723", "width": 1}, {"color": "green", "from": "ICD9: 01724", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01724", "width": 1}, {"color": "green", "from": "ICD9: 01725", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01725", "width": 1}, {"color": "green", "from": "ICD9: 01726", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01726", "width": 1}, {"color": "green", "from": "ICD9: 01730", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01730", "width": 1}, {"color": "green", "from": "ICD9: 01731", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01731", "width": 1}, {"color": "green", "from": "ICD9: 01732", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01732", "width": 1}, {"color": "green", "from": "ICD9: 01733", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01733", "width": 1}, {"color": "green", "from": "ICD9: 01734", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01734", "width": 1}, {"color": "green", "from": "ICD9: 01735", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01735", "width": 1}, {"color": "green", "from": "ICD9: 01736", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01736", "width": 1}, {"color": "green", "from": "ICD9: 01740", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01740", "width": 1}, {"color": "green", "from": "ICD9: 01741", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01741", "width": 1}, {"color": "green", "from": "ICD9: 01742", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01742", "width": 1}, {"color": "green", "from": "ICD9: 01743", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01743", "width": 1}, {"color": "green", "from": "ICD9: 01744", "label": "refers to", "length": 100, "title": "refers to", "to": "Title: 01744", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
